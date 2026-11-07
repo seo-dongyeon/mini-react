@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Memo Board · mini-react</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1 class="topbar__title">Memo Board</h1>
+      <nav class="topbar__nav" aria-label="화면 전환">
+        <a class="topbar__tab" aria-current="page" href="./">Playground</a>
+        <span class="topbar__tab topbar__tab--soon" aria-disabled="true">Memo Board (Phase 2)</span>
+      </nav>
+    </header>
+
+    <main class="layout">
+      <section class="board" aria-labelledby="actual-title">
+        <h2 id="actual-title" class="board__label">실제 영역</h2>
+        <!-- 이 요소의 자식이 Virtual DOM으로 변환되고 diff/patch 대상이 된다. -->
+        <div id="actual" class="board__notes">
+          <article class="note note--yellow" data-key="dentist">
+            <h3 class="note__title">금요일 치과 예약</h3>
+            <p class="note__meta">오전 10시 · 김 원장님</p>
+          </article>
+          <article class="note note--paper" data-key="meeting">
+            <h3 class="note__title">회의실 변경 → <strong>3시!!</strong></h3>
+            <p>장소 <s>204호</s> <em>B-12</em></p>
+          </article>
+          <article class="note note--peach" data-key="weekend">
+            <h3 class="note__title">주말에 할 일</h3>
+            <ul>
+              <li data-key="market">시장 구경</li>
+              <li data-key="hike">뒷산 산책</li>
+              <li data-key="bread">빵 굽기</li>
+            </ul>
+          </article>
+          <article class="note note--mint" data-key="groceries">
+            <h3 class="note__title">장보기</h3>
+            <label><input type="checkbox" checked /> 우유</label>
+            <label><input type="checkbox" /> 달걀 한 판</label>
+          </article>
+          <article class="note note--sky" data-key="rent">
+            <h3 class="note__title">25일까지 월세</h3>
+            <p class="note__meta">자동이체 확인하기</p>
+          </article>
+        </div>
+      </section>
+
+      <aside class="panel" aria-labelledby="editor-title">
+        <h2 id="editor-title" class="panel__label">테스트 영역</h2>
+        <div class="panel__toolbar">
+          <button id="back" class="chip" type="button">← 뒤로가기</button>
+          <span id="position" class="panel__position" aria-label="기록 위치"></span>
+          <button id="forward" class="chip" type="button">앞으로가기 →</button>
+          <button id="patch" class="chip chip--primary" type="button">Patch</button>
+        </div>
+        <label class="visually-hidden" for="editor">테스트 영역 HTML 소스</label>
+        <textarea id="editor" class="panel__editor" spellcheck="false" autocomplete="off"></textarea>
+        <div id="status" class="panel__status" role="status" aria-live="polite"></div>
+      </aside>
+    </main>
+
+    <script type="module" src="/src/playground/main.ts"></script>
+  </body>
+</html>

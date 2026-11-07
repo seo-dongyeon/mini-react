@@ -1,0 +1,294 @@
+/* 색·간격은 디자인 시안(DESIGN.md)의 값을 옮겨 왔다. */
+:root {
+  --ink: #242220;
+  --frame: #5c3a1e;
+  --frame-light: #c8965f;
+  --cork: #b88252;
+  --cork-dark: #9e6b3e;
+  --paper: #f7f2e7;
+  --rule: rgba(201, 213, 219, 0.6);
+  --margin-line: #d9534f;
+  --accent: #c85a32;
+  --highlight: #ffe98a;
+  --note-yellow: #fff6b8;
+  --note-peach: #ffd8be;
+  --note-mint: #d5f2dd;
+  --note-sky: #d4ebf9;
+  --space-sm: 0.5rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --font-hand: 'Nanum Pen Script', cursive;
+  --font-code: ui-monospace, Consolas, 'Courier New', monospace;
+  --shadow-note: 1px 2px 3px rgba(38, 20, 8, 0.3), 6px 12px 18px rgba(36, 18, 6, 0.22);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: #21150d;
+  color: var(--ink);
+  font-family: var(--font-hand);
+  font-size: 1.35rem;
+}
+
+/* 키보드 포커스는 형광펜 느낌으로 보이게 남긴다. */
+:focus-visible {
+  outline: 3px solid var(--highlight);
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- 상단 바 ---------- */
+.topbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-md);
+  padding: var(--space-md) var(--space-lg);
+  color: var(--paper);
+}
+
+.topbar__title {
+  margin: 0;
+  font-size: 2.6rem;
+  font-weight: 400;
+}
+
+.topbar__nav {
+  display: flex;
+  gap: var(--space-sm);
+}
+
+.topbar__tab {
+  padding: 0.2rem 0.8rem;
+  border-radius: 2px;
+  color: var(--paper);
+  text-decoration: none;
+}
+
+.topbar__tab[aria-current='page'] {
+  background: var(--paper);
+  color: var(--ink);
+}
+
+.topbar__tab--soon {
+  opacity: 0.55;
+}
+
+/* ---------- 레이아웃: 넓은 화면은 좌우, 좁은 화면은 위아래 ---------- */
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(320px, 420px);
+  gap: var(--space-lg);
+  padding: 0 var(--space-lg) var(--space-lg);
+}
+
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 0 var(--space-md) var(--space-md);
+  }
+}
+
+/* ---------- 코르크 보드 (실제 영역) ---------- */
+.board {
+  position: relative;
+  padding: var(--space-lg);
+  border: 18px solid var(--frame-light);
+  border-radius: 4px;
+  background:
+    radial-gradient(circle at 20% 25%, rgba(255, 235, 195, 0.35), transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(105, 54, 18, 0.35), transparent 55%),
+    radial-gradient(rgba(77, 35, 9, 0.35) 0.8px, transparent 0.8px) 0 0 / 23px 23px,
+    linear-gradient(135deg, var(--cork), var(--cork-dark));
+  box-shadow:
+    inset 0 0 28px rgba(45, 20, 8, 0.65),
+    0 0 0 2px var(--frame),
+    0 18px 36px -12px rgba(0, 0, 0, 0.6);
+}
+
+.board__label,
+.panel__label {
+  margin: 0 0 var(--space-md);
+  font-size: 1.6rem;
+  font-weight: 400;
+}
+
+.board__label {
+  display: inline-block;
+  padding: 0 0.6rem;
+  background: var(--paper);
+  transform: rotate(-1.5deg);
+  box-shadow: 2px 3px 6px rgba(46, 26, 12, 0.28);
+}
+
+.board__notes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+  gap: var(--space-lg);
+  align-items: start;
+}
+
+/* ---------- 메모 ---------- */
+.note {
+  position: relative;
+  min-height: 150px;
+  padding: var(--space-lg) var(--space-md) var(--space-md);
+  border-radius: 3px;
+  background: var(--note-yellow);
+  box-shadow: var(--shadow-note);
+  line-height: 1.3;
+}
+
+/* 압정. DOM에 따로 두지 않아야 테스트 영역 소스가 간결하다. */
+.note::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 16px;
+  height: 16px;
+  margin-left: -8px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, #fff 0 2px, var(--accent) 3px, #7a2a10);
+  box-shadow: 3px 5px 4px rgba(25, 12, 4, 0.45);
+}
+
+/* 메모마다 조금씩 다르게 기울인다. */
+.note:nth-child(4n + 1) { transform: rotate(-2deg); }
+.note:nth-child(4n + 2) { transform: rotate(1.8deg); }
+.note:nth-child(4n + 3) { transform: rotate(-1deg); }
+.note:nth-child(4n + 4) { transform: rotate(2.4deg); }
+
+.note--yellow { background: var(--note-yellow); }
+.note--peach { background: var(--note-peach); }
+.note--mint { background: var(--note-mint); }
+.note--sky { background: var(--note-sky); }
+
+/* 줄 노트 (왼쪽 여백 선 + 가로줄) */
+.note--paper {
+  background:
+    linear-gradient(90deg, transparent 22px, var(--margin-line) 22px 23px, transparent 23px),
+    repeating-linear-gradient(transparent 0 27px, var(--rule) 27px 28px),
+    var(--paper);
+  padding-left: 32px;
+}
+
+.note__title {
+  margin: 0 0 var(--space-sm);
+  font-size: 1.7rem;
+  font-weight: 400;
+}
+
+.note__meta {
+  color: #5a4a3a;
+}
+
+.note p,
+.note ul {
+  margin: 0 0 var(--space-sm);
+}
+
+.note ul {
+  padding-left: 1.1rem;
+}
+
+.note label {
+  display: block;
+}
+
+.note strong {
+  color: #a82020;
+}
+
+/* ---------- 패널 (테스트 영역) ---------- */
+.panel {
+  display: flex;
+  flex-direction: column;
+  padding: var(--space-lg);
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(transparent 0 27px, var(--rule) 27px 28px),
+    var(--paper);
+  box-shadow: var(--shadow-note);
+}
+
+.panel__toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-sm);
+  margin-bottom: var(--space-md);
+}
+
+.panel__position {
+  min-width: 3.5rem;
+  text-align: center;
+}
+
+.chip {
+  padding: 0.25rem 0.8rem;
+  border: 1px solid #8a6a48;
+  border-radius: 2px;
+  background: #d9b98f;
+  color: var(--ink);
+  font: inherit;
+  cursor: pointer;
+  box-shadow: 1px 2px 3px rgba(46, 26, 12, 0.25);
+}
+
+.chip:active {
+  transform: translateY(1px);
+  box-shadow: inset 1px 1px 3px rgba(46, 26, 12, 0.3);
+}
+
+.chip:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.chip--primary {
+  margin-left: auto;
+  background: var(--accent);
+  border-color: #7a2a10;
+  color: #fff;
+}
+
+.panel__editor {
+  flex: 1;
+  min-height: 420px;
+  padding: var(--space-md);
+  border: 1px solid #c8b89e;
+  border-radius: 2px;
+  background: #fffdf7;
+  color: var(--ink);
+  font-family: var(--font-code);
+  font-size: 0.85rem;
+  line-height: 1.5;
+  resize: vertical;
+  tab-size: 2;
+}
+
+.panel__status {
+  min-height: 2.5rem;
+  margin-top: var(--space-md);
+  font-size: 1.2rem;
+}
+
+.status__warning {
+  margin: 0.2rem 0 0;
+  color: #93000a;
+}
