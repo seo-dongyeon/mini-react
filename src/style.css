@@ -198,12 +198,44 @@ body {
 }
 
 .note p,
-.note ul {
+.note ul,
+.note ol,
+.note table,
+.note blockquote {
   margin: 0 0 var(--space-sm);
 }
 
-.note ul {
+.note ul,
+.note ol {
   padding-left: 1.1rem;
+}
+
+.note table {
+  border-collapse: collapse;
+}
+
+.note th,
+.note td {
+  padding: 0 0.6rem;
+  border-bottom: 1px solid var(--rule);
+  font-weight: 400;
+  text-align: left;
+}
+
+.note blockquote {
+  padding-left: var(--space-sm);
+  border-left: 3px solid var(--frame-light);
+}
+
+.note input[type='text'],
+.note button {
+  max-width: 100%;
+  margin: 0 0 var(--space-sm);
+  font: inherit;
+}
+
+.note a {
+  color: var(--frame);
 }
 
 .note label {
@@ -291,4 +323,12 @@ body {
 .status__warning {
   margin: 0.2rem 0 0;
   color: #93000a;
+}
+
+.panel__log {
+  margin: var(--space-sm) 0 0;
+  padding-left: 1.4rem;
+  font-family: var(--font-code);
+  font-size: 0.8rem;
+  overflow-wrap: anywhere;
 }

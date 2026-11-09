@@ -29,6 +29,28 @@
           <article class="note note--paper" data-key="meeting">
             <h3 class="note__title">회의실 변경 → <strong>3시!!</strong></h3>
             <p>장소 <s>204호</s> <em>B-12</em></p>
+            <p><a href="https://example.com">회의록 링크</a></p>
+          </article>
+          <article class="note note--paper" data-key="scores">
+            <h3 class="note__title">이번 주 운동</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>요일</th>
+                  <th>분</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>월</td>
+                  <td>30</td>
+                </tr>
+                <tr>
+                  <td>수</td>
+                  <td>45</td>
+                </tr>
+              </tbody>
+            </table>
           </article>
           <article class="note note--peach" data-key="weekend">
             <h3 class="note__title">주말에 할 일</h3>
@@ -37,15 +59,22 @@
               <li data-key="hike">뒷산 산책</li>
               <li data-key="bread">빵 굽기</li>
             </ul>
+            <ol>
+              <li>청소</li>
+              <li>빨래</li>
+            </ol>
           </article>
           <article class="note note--mint" data-key="groceries">
             <h3 class="note__title">장보기</h3>
             <label><input type="checkbox" checked /> 우유</label>
             <label><input type="checkbox" /> 달걀 한 판</label>
+            <input type="text" value="더 살 것" aria-label="더 살 것" />
+            <button type="button">다 샀다</button>
           </article>
           <article class="note note--sky" data-key="rent">
             <h3 class="note__title">25일까지 월세</h3>
             <p class="note__meta">자동이체 확인하기</p>
+            <blockquote>늦으면 연체료 있음</blockquote>
           </article>
         </div>
       </section>
@@ -61,6 +90,7 @@
         <label class="visually-hidden" for="editor">테스트 영역 HTML 소스</label>
         <textarea id="editor" class="panel__editor" spellcheck="false" autocomplete="off"></textarea>
         <div id="status" class="panel__status" role="status" aria-live="polite"></div>
+        <ol id="log" class="panel__log" aria-label="diff 연산 목록"></ol>
       </aside>
     </main>
 
