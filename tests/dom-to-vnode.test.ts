@@ -22,6 +22,12 @@ describe('domToVNode', () => {
     expect(p.type === 'element' && p.children.map((c) => c.type)).toEqual(['element', 'text', 'element'])
   })
 
+  it('pre·textarea 안에서는 공백과 개행도 내용으로 남긴다', () => {
+    const [pre, textarea] = vroot('<pre> \n <b>\n</b></pre><textarea>\n\n</textarea>').children
+    expect(pre).toMatchObject({ children: [{ type: 'text', text: ' \n ' }, { tag: 'b', children: [{ type: 'text', text: '\n' }] }] })
+    expect(textarea).toMatchObject({ children: [{ type: 'text', text: '\n' }] })
+  })
+
   it('요소·텍스트가 아닌 노드는 null', () => {
     expect(domToVNode(document.createComment('x'))).toBeNull()
   })

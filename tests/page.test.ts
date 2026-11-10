@@ -98,6 +98,22 @@ describe('Patch', () => {
     expect(position()).toBe('1 / 1')
   })
 
+  it('최상위 텍스트·pre·textarea가 있어도 다시 Patch하면 변경이 없다', () => {
+    edit(() => '앞 <b>강조</b> 뒤\n<pre> \n </pre>\n<textarea>\n\n내용</textarea>')
+    const textarea = actual.querySelector('textarea')!
+    expect(textarea.value).toBe('\n내용')
+
+    patchButton.click()
+    patchButton.click()
+
+    expect(logItems()).toEqual([])
+    expect(position()).toBe('2 / 2')
+    expect(actual.firstChild!.textContent).toBe('앞 ')
+    expect(actual.querySelector('pre')!.textContent).toBe(' \n ')
+    expect(actual.querySelector('textarea')).toBe(textarea)
+    expect(textarea.value).toBe('\n내용')
+  })
+
   it('스크립트와 이벤트 속성은 실제 영역에 들어가지 않는다', () => {
     edit((src) => `${src}\n<script>window.hacked = 1</script>\n<img src="x" onerror="window.hacked = 1">`)
 

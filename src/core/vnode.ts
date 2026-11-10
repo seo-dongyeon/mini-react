@@ -19,6 +19,10 @@ export interface VText {
 
 export const KEY_ATTR = 'data-key'
 
+/** 안쪽 공백·개행이 화면에 그대로 보이는 태그. 이 안에서는 공백 텍스트를 버리거나 들여쓰지 않는다. */
+// shortcut: CSS white-space: pre로 공백을 살린 일반 요소는 구분하지 못한다. 그런 입력이 필요해지면 태그 대신 계산된 스타일로 판단한다.
+export const PRESERVE_SPACE_TAGS = new Set(['pre', 'textarea'])
+
 /** 트리 전체에서 같은 부모 아래 key가 겹치는 곳을 찾는다. diff는 이런 목록을 인덱스 비교로 처리한다. */
 export function findDuplicateKeys(node: VNode): string[] {
   if (node.type === 'text') return []
