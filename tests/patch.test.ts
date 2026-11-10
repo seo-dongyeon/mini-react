@@ -1,4 +1,4 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { diff } from '../src/core/diff'
 import { patch } from '../src/core/patch'
 import { createElement } from '../src/core/render'
@@ -51,6 +51,17 @@ describe('patch: 바뀐 부분만 건드린다', () => {
     expect(after).toEqual([before[2], before[0], before[1]])
   })
 
+  it('diff가 옮기라고 한 노드만 옮기고 제자리 노드는 건드리지 않는다', () => {
+    const spy = vi.spyOn(Node.prototype, 'insertBefore')
+    const el = createElement(vroot(list('abc'))) as HTMLElement
+    const [a, b] = Array.from(el.querySelectorAll('li'))
+    patch(el, diff(vroot(list('abc')), vroot(list('cab'))))
+    expect(spy).toHaveBeenCalledTimes(1)
+    expect(spy.mock.calls[0]).toEqual([el.querySelector('li[data-key="c"]'), a])
+    expect(a.nextSibling).toBe(b)
+    spy.mockRestore()
+  })
+
   it('루트가 교체되면 새 루트를 돌려준다', () => {
     const el = createElement({ type: 'element', tag: 'div', props: {}, children: [] })
     const next = patch(el, diff({ type: 'element', tag: 'div', props: {}, children: [] }, { type: 'element', tag: 'section', props: {}, children: [] }))
@@ -71,6 +82,15 @@ describe('patch: key 목록 무작위 검증', () => {
   it('무작위 추가·삭제·재정렬 300회', () => {
     const pool = 'abcdefghij'
     const pick = () => [...pool].filter(() => random() < 0.6).sort(() => random() - 0.5).join('')
-    for (let i = 0; i < 300; i++) patchAndCompare(list(pick()), list(pick()))
+    const spy = vi.spyOn(Node.prototype, 'insertBefore')
+    for (let i = 0; i < 300; i++) {
+      const [a, b] = [list(pick()), list(pick())]
+      const placed = diff(vroot(a), vroot(b)).filter((op) => op.type === 'INSERT' || op.type === 'MOVE').length
+      spy.mockClear()
+      patchAndCompare(a, b)
+      // DOM 이동·추가 횟수가 diff의 INSERT + MOVE 수와 같아야 한다. 제자리 노드를 옮기면 더 많아진다.
+      expect(spy).toHaveBeenCalledTimes(placed)
+    }
+    spy.mockRestore()
   })
 })

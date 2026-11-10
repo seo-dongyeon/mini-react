@@ -47,7 +47,8 @@ export function patch(root: Node, ops: Op[]): Node {
 /**
  * 부모의 최종 자식 순서를 만들고 뒤에서부터 맞춘다.
  * 연산에 없는 자식(제자리 노드)은 지금 순서 그대로 빈자리를 채운다.
- * 각 노드를 "바로 다음에 와야 할 노드" 앞에 넣으므로, 이미 제자리인 노드는 움직이지 않는다.
+ * 옮기거나 새로 넣을 노드만 "바로 다음에 와야 할 노드" 앞에 넣는다.
+ * 제자리 노드는 이미 서로의 순서가 맞으므로 건드리지 않는다. 옮기면 포커스 같은 상태를 잃는다.
  */
 function placeChildren(parent: Node, byIndex: Map<number, Node>): void {
   const moving = new Set(byIndex.values())
@@ -59,7 +60,7 @@ function placeChildren(parent: Node, byIndex: Map<number, Node>): void {
   let anchor: Node | null = null
   for (let i = finalOrder.length - 1; i >= 0; i--) {
     const node = finalOrder[i]
-    if (node.parentNode !== parent || node.nextSibling !== anchor) parent.insertBefore(node, anchor)
+    if (moving.has(node) && (node.parentNode !== parent || node.nextSibling !== anchor)) parent.insertBefore(node, anchor)
     anchor = node
   }
 }
