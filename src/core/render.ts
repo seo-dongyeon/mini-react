@@ -15,7 +15,8 @@ export function createElement(vnode: VNode): Node {
  */
 export function setProp(el: Element, name: string, value: string): void {
   el.setAttribute(name, value)
-  if (name === 'value' && 'value' in el) (el as HTMLInputElement).value = value
+  // 같은 값을 다시 넣으면 한글 조합 중인 글자가 끊기므로 다를 때만 넣는다.
+  if (name === 'value' && 'value' in el && el.value !== value) (el as HTMLInputElement).value = value
   if (name === 'checked' && 'checked' in el) (el as HTMLInputElement).checked = true
 }
 

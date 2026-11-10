@@ -3,94 +3,109 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Memo Board · mini-react</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Nanum+Pen+Script&display=swap" rel="stylesheet" />
+    <title>Phase 1 · mini-react 실습실</title>
   </head>
   <body>
     <header class="topbar">
-      <h1 class="topbar__title">Memo Board</h1>
+      <h1 class="topbar__title">mini-react 실습실</h1>
       <nav class="topbar__nav" aria-label="화면 전환">
-        <a class="topbar__tab" aria-current="page" href="./">Playground</a>
-        <span class="topbar__tab topbar__tab--soon" aria-disabled="true">Memo Board (Phase 2)</span>
+        <a class="topbar__tab" aria-current="page" href="./">Phase 1 · VDOM / Diff / Patch</a>
+        <a class="topbar__tab" href="./phase2.html">Phase 2 · Component / Hooks</a>
       </nav>
     </header>
 
-    <main class="layout">
-      <section class="board" aria-labelledby="actual-title">
-        <h2 id="actual-title" class="board__label">실제 영역</h2>
+    <!-- Patch 한 번에 거치는 단계와 그 단계를 맡은 파일 -->
+    <ol class="flow" aria-label="Patch를 누르면 일어나는 일">
+      <li><b>HTML 문자열</b><small>테스트 영역</small></li>
+      <li><b>새 Virtual DOM</b><small>sanitize.ts · dom-to-vnode.ts</small></li>
+      <li><b>diff(이전, 새)</b><small>diff.ts → 연산 목록</small></li>
+      <li><b>patch</b><small>patch.ts → 바뀐 곳만 DOM 수정</small></li>
+      <li><b>기록에 저장</b><small>history.ts</small></li>
+    </ol>
+
+    <main class="layout layout--three">
+      <section class="pane" aria-labelledby="actual-title">
+        <h2 id="actual-title" class="pane__label">실제 영역 <small>진짜 DOM. patch가 고친 곳이 노랗게 깜빡여</small></h2>
         <!-- 이 요소의 자식이 Virtual DOM으로 변환되고 diff/patch 대상이 된다. -->
-        <div id="actual" class="board__notes">
-          <article class="note note--yellow" data-key="dentist">
-            <h3 class="note__title">금요일 치과 예약</h3>
-            <p class="note__meta">오전 10시 · 김 원장님</p>
-          </article>
-          <article class="note note--paper" data-key="meeting">
-            <h3 class="note__title">회의실 변경 → <strong>3시!!</strong></h3>
-            <p>장소 <s>204호</s> <em>B-12</em></p>
-            <p><a href="https://example.com">회의록 링크</a></p>
-          </article>
-          <article class="note note--paper" data-key="scores">
-            <h3 class="note__title">이번 주 운동</h3>
+        <div id="actual" class="stage">
+          <section class="card" data-key="text">
+            <h3>텍스트와 속성</h3>
+            <p class="lead">이 문장의 <strong>글자</strong>를 고쳐 봐.</p>
+            <p><a href="https://example.com">링크</a>의 href를 바꾸면 SET_PROP이 나와.</p>
+          </section>
+          <section class="card" data-key="list">
+            <h3>목록</h3>
+            <ul>
+              <li data-key="a">사과</li>
+              <li data-key="b">바나나</li>
+              <li data-key="c">체리</li>
+            </ul>
+            <ol>
+              <li>첫째</li>
+              <li>둘째</li>
+              <li>셋째</li>
+            </ol>
+          </section>
+          <section class="card" data-key="form">
+            <h3>폼 요소</h3>
+            <label><input type="checkbox" checked /> checked 속성</label>
+            <input type="text" value="value 속성" aria-label="입력칸" />
+            <button type="button">버튼</button>
+          </section>
+          <section class="card" data-key="etc">
+            <h3>표와 인용</h3>
             <table>
               <thead>
                 <tr>
-                  <th>요일</th>
-                  <th>분</th>
+                  <th>함수</th>
+                  <th>하는 일</th>
                 </tr>
               </thead>
               <tbody>
                 <tr>
-                  <td>월</td>
-                  <td>30</td>
+                  <td>diff</td>
+                  <td>비교</td>
                 </tr>
                 <tr>
-                  <td>수</td>
-                  <td>45</td>
+                  <td>patch</td>
+                  <td>반영</td>
                 </tr>
               </tbody>
             </table>
-          </article>
-          <article class="note note--peach" data-key="weekend">
-            <h3 class="note__title">주말에 할 일</h3>
-            <ul>
-              <li data-key="market">시장 구경</li>
-              <li data-key="hike">뒷산 산책</li>
-              <li data-key="bread">빵 굽기</li>
-            </ul>
-            <ol>
-              <li>청소</li>
-              <li>빨래</li>
-            </ol>
-          </article>
-          <article class="note note--mint" data-key="groceries">
-            <h3 class="note__title">장보기</h3>
-            <label><input type="checkbox" checked /> 우유</label>
-            <label><input type="checkbox" /> 달걀 한 판</label>
-            <input type="text" value="더 살 것" aria-label="더 살 것" />
-            <button type="button">다 샀다</button>
-          </article>
-          <article class="note note--sky" data-key="rent">
-            <h3 class="note__title">25일까지 월세</h3>
-            <p class="note__meta">자동이체 확인하기</p>
-            <blockquote>늦으면 연체료 있음</blockquote>
-          </article>
+            <blockquote>태그를 바꾸면 통째로 교체돼.</blockquote>
+          </section>
         </div>
       </section>
 
-      <aside class="panel" aria-labelledby="editor-title">
-        <h2 id="editor-title" class="panel__label">테스트 영역</h2>
-        <div class="panel__toolbar">
-          <button id="back" class="chip" type="button">← 뒤로가기</button>
-          <span id="position" class="panel__position" aria-label="기록 위치"></span>
-          <button id="forward" class="chip" type="button">앞으로가기 →</button>
+      <section class="pane" aria-labelledby="editor-title">
+        <h2 id="editor-title" class="pane__label">테스트 영역 <small>HTML을 고치고 Patch</small></h2>
+        <div class="toolbar">
+          <button id="back" class="chip" type="button">← 뒤로</button>
+          <span id="position" class="toolbar__position" aria-label="기록 위치"></span>
+          <button id="forward" class="chip" type="button">앞으로 →</button>
           <button id="patch" class="chip chip--primary" type="button">Patch</button>
         </div>
         <label class="visually-hidden" for="editor">테스트 영역 HTML 소스</label>
-        <textarea id="editor" class="panel__editor" spellcheck="false" autocomplete="off"></textarea>
-        <div id="status" class="panel__status" role="status" aria-live="polite"></div>
-        <ol id="log" class="panel__log" aria-label="diff 연산 목록"></ol>
+        <textarea id="editor" class="editor" spellcheck="false" autocomplete="off"></textarea>
+        <div class="toolbar" aria-label="예제: 누르면 소스를 고치고 Patch까지 해 준다">
+          <button class="chip" type="button" data-scenario="text">텍스트 바꾸기</button>
+          <button class="chip" type="button" data-scenario="prop">속성 바꾸기</button>
+          <button class="chip" type="button" data-scenario="insert">항목 추가/삭제</button>
+          <button class="chip" type="button" data-scenario="replace">태그 교체</button>
+          <button class="chip" type="button" data-scenario="move">key 목록 돌리기</button>
+          <button class="chip" type="button" data-scenario="nokey">key 없는 목록 돌리기</button>
+          <button class="chip" type="button" data-scenario="reset">샘플로 되돌리기</button>
+        </div>
+      </section>
+
+      <aside class="pane" aria-labelledby="result-title">
+        <h2 id="result-title" class="pane__label">결과 <small>diff가 만든 연산</small></h2>
+        <div id="status" class="status" role="status" aria-live="polite"></div>
+        <ol id="log" class="log" aria-label="diff 연산 목록"></ol>
+        <details class="tree" open>
+          <summary>지금 Virtual DOM <small>연산의 [경로]는 여기서 자식 번호를 따라 내려간 주소</small></summary>
+          <pre id="vdom"></pre>
+        </details>
       </aside>
     </main>
 

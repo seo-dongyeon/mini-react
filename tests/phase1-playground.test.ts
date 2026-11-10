@@ -73,7 +73,7 @@ describe('Phase 1 실제 페이지 버튼 통합', () => {
 
   it('실제 index.html의 샘플을 VDOM으로 읽어 편집기에 표시하고 기록을 초기화한다', () => {
     const actual = element('#actual')
-    expect(actual.querySelectorAll(':scope > article')).toHaveLength(6)
+    expect(actual.querySelectorAll(':scope > section')).toHaveLength(4)
     expect(parseChildren(element<HTMLTextAreaElement>('#editor').value)).toEqual(childrenToVNodes(actual.childNodes))
     expect(element('#position').textContent).toBe('1 / 1')
     expect(element<HTMLButtonElement>('#back').disabled).toBe(true)
@@ -94,16 +94,16 @@ describe('Phase 1 실제 페이지 버튼 통합', () => {
   })
 
   it('텍스트만 편집하면 페이지에서도 변경하지 않은 DOM 노드를 재사용한다', () => {
-    const article = element('[data-key="dentist"]')
-    const heading = element('[data-key="dentist"] h3')
+    const article = element('[data-key="text"]')
+    const heading = element('[data-key="text"] h3')
     const text = heading.firstChild
-    const other = element('[data-key="meeting"]')
-    applyHtml(element<HTMLTextAreaElement>('#editor').value.replace('금요일 치과 예약', '토요일 치과 예약'))
-    expect(element('[data-key="dentist"]')).toBe(article)
-    expect(element('[data-key="dentist"] h3')).toBe(heading)
+    const other = element('[data-key="list"]')
+    applyHtml(element<HTMLTextAreaElement>('#editor').value.replace('텍스트와 속성', '글자와 속성'))
+    expect(element('[data-key="text"]')).toBe(article)
+    expect(element('[data-key="text"] h3')).toBe(heading)
     expect(heading.firstChild).toBe(text)
-    expect(heading.textContent).toBe('토요일 치과 예약')
-    expect(element('[data-key="meeting"]')).toBe(other)
+    expect(heading.textContent).toBe('글자와 속성')
+    expect(element('[data-key="list"]')).toBe(other)
     expect(element('#log').children).toHaveLength(1)
     expect(element('#status').textContent).toContain('실제 DOM 변경 1건')
   })

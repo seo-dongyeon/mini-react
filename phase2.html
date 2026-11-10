@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Phase 2 · mini-react 실습실</title>
+  </head>
+  <body>
+    <header class="topbar">
+      <h1 class="topbar__title">mini-react 실습실</h1>
+      <nav class="topbar__nav" aria-label="화면 전환">
+        <a class="topbar__tab" href="./">Phase 1 · VDOM / Diff / Patch</a>
+        <a class="topbar__tab" aria-current="page" href="./phase2.html">Phase 2 · Component / Hooks</a>
+      </nav>
+    </header>
+
+    <!-- 클릭 한 번에 거치는 단계와 그 단계를 맡은 함수 -->
+    <ol class="flow" aria-label="버튼을 누르면 일어나는 일">
+      <li><b>이벤트</b><small>dispatch → 지금 VDOM의 핸들러</small></li>
+      <li><b>setState</b><small>hooks[i] 값 변경 + 렌더 예약</small></li>
+      <li><b>render</b><small>update() → App() 다시 실행</small></li>
+      <li><b>diff → patch</b><small>Phase 1 그대로</small></li>
+      <li><b>effect</b><small>deps가 바뀐 것만 실행</small></li>
+    </ol>
+
+    <main class="layout layout--two">
+      <section class="pane" aria-labelledby="app-title">
+        <h2 id="app-title" class="pane__label">앱 <small>src/phase2/app.ts · 상태는 전부 루트 App에</small></h2>
+        <div id="app" class="stage"></div>
+      </section>
+
+      <aside class="pane" aria-labelledby="inside-title">
+        <h2 id="inside-title" class="pane__label">컴포넌트 내부 <small>렌더 <span id="render-count">0</span>번</small></h2>
+
+        <h3 class="pane__sub">hooks 배열 <small>FunctionComponent.hooks · 상태가 실제로 사는 곳</small></h3>
+        <table class="hooks">
+          <thead>
+            <tr><th>칸</th><th>종류</th><th>들어 있는 값</th></tr>
+          </thead>
+          <tbody id="hooks"></tbody>
+        </table>
+
+        <h3 class="pane__sub">일어난 순서 <button id="clear" class="chip" type="button">지우기</button></h3>
+        <ol id="timeline" class="log log--timeline" aria-label="일어난 순서"></ol>
+
+        <h3 class="pane__sub">마지막 diff 연산</h3>
+        <ol id="ops" class="log" aria-label="마지막 diff 연산"></ol>
+      </aside>
+    </main>
+
+    <script type="module" src="/src/phase2/main.ts"></script>
+  </body>
+</html>

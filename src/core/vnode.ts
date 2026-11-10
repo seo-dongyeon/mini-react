@@ -10,6 +10,11 @@ export interface VElement {
   children: VNode[]
   /** 형제 사이에서 같은 노드를 찾아 주는 식별자. Phase 1에서는 data-key 속성에서 읽는다. */
   key?: string
+  /**
+   * Phase 2 이벤트 핸들러 ('click' → 함수). 문자열 props와 따로 둔다.
+   * diff·patch는 보지 않는다. 컴포넌트 루트가 이벤트를 한 곳에서 받아 "지금 VDOM"의 함수를 찾아 부른다(component.ts).
+   */
+  events?: Record<string, (event: Event) => void>
 }
 
 export interface VText {
