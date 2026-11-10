@@ -225,4 +225,20 @@ describe('훅 규칙', () => {
     flag = false
     expect(() => component.update()).toThrow(/hooks\[0\]는 지난 렌더에 state/)
   })
+
+  it.each([
+    ['늘어나면', false, /더 많이 불렀어/],
+    ['줄어들면', true, /이번엔 1개야/],
+  ])('훅 개수가 %s 에러', (_name, start, message) => {
+    let extra = start
+    const component = new FunctionComponent(() => {
+      useState(0)
+      if (extra) useState(1)
+      return h('p', null)
+    }, document.createElement('div'))
+    component.mount()
+    extra = !start
+    expect(() => component.update()).toThrow(message)
+    expect(component.hooks).toHaveLength(start ? 2 : 1) // 잘못된 칸을 만들지 않는다
+  })
 })

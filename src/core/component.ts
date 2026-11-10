@@ -78,10 +78,18 @@ export class FunctionComponent {
     return true
   }
 
-  /** 훅이 부른다. 이번 렌더에서 몇 번째 훅인지 정하고 그 칸을 돌려준다. */
+  /**
+   * 훅이 부른다. 이번 렌더에서 몇 번째 훅인지 정하고 그 칸을 돌려준다.
+   * 칸은 첫 렌더에만 만든다. 그 뒤에 칸이 모자라면 훅이 늘어난 것이다.
+   * 같은 종류의 훅끼리 순서만 바뀐 경우는 알아챌 방법이 없다.
+   */
   nextHook<K extends Hook['kind']>(kind: K, create: () => Extract<Hook, { kind: K }>): { index: number; hook: Extract<Hook, { kind: K }> } {
     const index = this.hookIndex++
-    if (index >= this.hooks.length) this.hooks.push(create())
+    if (index >= this.hooks.length) {
+      // this.vnode가 있으면 첫 렌더가 끝난 뒤다.
+      if (this.vnode) throw new Error(`지난 렌더에는 훅이 ${this.hooks.length}개였는데 이번엔 더 많이 불렀어. 훅은 매번 같은 순서·개수로 불러야 해`)
+      this.hooks.push(create())
+    }
     const hook = this.hooks[index]
     if (hook.kind !== kind) {
       throw new Error(`hooks[${index}]는 지난 렌더에 ${hook.kind}였는데 이번엔 ${kind}야. 훅을 if·for 안에서 부르면 순서가 바뀐다`)

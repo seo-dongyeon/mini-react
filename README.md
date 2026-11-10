@@ -26,7 +26,7 @@ npm run build    # 타입 검사 + 빌드
 ## Phase 2 동작 (phase2.html)
 
 - `FunctionComponent(fn, container)`: `hooks` 배열에 상태를 두고 `mount()`로 처음 그리고 `update()`로 다시 그린다. `update()`는 함수 재실행 → diff → patch → effect 순서다.
-- 훅은 호출 순서(`hooks[n]`)로 자기 칸을 찾는다. 순서나 개수가 바뀌면 에러를 낸다.
+- 훅은 호출 순서(`hooks[n]`)로 자기 칸을 찾는다. 칸의 종류가 달라지거나 개수가 늘거나 줄면 에러를 낸다. 같은 종류의 훅끼리 순서만 바뀐 경우는 알아채지 못한다.
 - 훅은 루트 컴포넌트에서만 쓴다. `h(Child, props)`로 부른 자식 안이나 렌더 밖에서 부르면 에러를 낸다. 자식은 props만 받는 순수 함수이고, 상태를 바꾸려면 부모가 준 콜백을 부른다.
 - `useState`: 같은 값(`Object.is`)이면 무시한다. 아니면 값을 바꾸고 렌더를 마이크로태스크로 예약한다. 한 이벤트 안의 여러 setState는 렌더 1번으로 묶인다. `setState(prev => next)` 형태를 받는다.
 - `useEffect`: patch가 끝난 직후 동기로 실행한다. deps가 같으면 건너뛰고, 다시 실행하기 전에 지난 cleanup을 부른다. deps가 없으면 매 렌더, `[]`이면 처음 한 번.
@@ -39,7 +39,7 @@ npm run build    # 타입 검사 + 빌드
 
 - 상태는 루트 하나에만 있다. React는 컴포넌트마다 자기 hooks를 갖고, 바뀐 컴포넌트부터 다시 그린다.
 - 자식 컴포넌트는 `h` 호출 시점에 바로 실행되어 VNode로 펼쳐진다. React는 컴포넌트 경계를 트리(Fiber)에 남긴다.
-- effect를 patch 직후 동기로 실행한다. React는 화면을 그린 뒤 실행한다.
+- effect를 patch 직후 동기로 실행한다. React는 보통 브라우저가 화면을 그린(Paint) 뒤 실행하지만, 클릭 같은 상호작용에서 시작된 effect는 그리기 전에 실행할 수도 있다. "DOM에 반영됨"과 "화면에 그려짐"은 다른 단계다.
 - 렌더를 중간에 멈추거나 우선순위를 나누지 않는다. unmount와 그때의 cleanup도 없다.
 
 ## 구조
